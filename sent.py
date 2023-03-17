@@ -1,4 +1,4 @@
-# Extract and tokenize in words
+# Extract and tokenize in sentences
 
 from urllib import request
 from pdfminer.high_level import extract_text
@@ -43,8 +43,9 @@ for url in urls:
     response = request.urlopen(url)
     raw_data = response.read()
     raw_text = extract_text(io.BytesIO(raw_data))
-    tokens = nltk.word_tokenize(raw_text)
+    tokens = nltk.sent_tokenize(raw_text)
     tokens_list.append(tokens)
 
-# Print the tokens
+# Print the sents
 print(tokens_list)
+

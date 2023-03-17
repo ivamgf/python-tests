@@ -1,8 +1,9 @@
-# Extract and tokenize in words
+# Extract, tokenize and get the FreqDist
 
 from urllib import request
 from pdfminer.high_level import extract_text
 import nltk
+from nltk.probability import FreqDist
 import io
 
 # Configuration for processing UTF-8
@@ -11,7 +12,7 @@ nltk.download('punkt')
 
 # url of page to extract the text
 urls = [
-    "file:///C:\Database_texts/2fa1759f3d3fd65c4dfd9556cafbc9278d6a.pdf",
+    'file:///C:\Database_texts/2fa1759f3d3fd65c4dfd9556cafbc9278d6a.pdf',
     'file:///C:\Database_texts/9a-revista-eletronica-book.pdf',
     'file:///C:\Database_texts/2015_06_0113_0138.pdf',
     'file:///C:\Database_texts/11092-Texto%20do%20artigo-36586-1-10-20091026.pdf',
@@ -22,8 +23,6 @@ urls = [
     'file:///C:\Database_texts/A-prote%C3%A7%C3%A3o-na-cultura-juridica.pdf',
     'file:///C:\Database_texts/atualizacao_reforma_mauroschiavi.pdf',
     'file:///C:\Database_texts/claudio_jannotti_rocha_e_mirella_karen_carvalho_bifano_muniz.pdf',
-    'file:///C:\Database_texts/ct3407.pdf',
-    'file:///C:\Database_texts/Dos-transplantes-juridicos.pdf',
     'file:///C:\Database_texts/Dos-transplantes-juridicos.pdf',
     'file:///C:\Database_texts/Francisco-Kennedy-da-Silva-de-Oliveira.pdf',
     'file:///C:\Database_texts/jose_roberto_freire_conciliacao_judicial.pdf',
@@ -38,13 +37,16 @@ urls = [
 # Create a texts list
 tokens_list = []
 
+# Create the FreqDist
+fdist = FreqDist()
+
 # Loop
 for url in urls:
     response = request.urlopen(url)
     raw_data = response.read()
     raw_text = extract_text(io.BytesIO(raw_data))
-    tokens = nltk.word_tokenize(raw_text)
-    tokens_list.append(tokens)
+    tokens = tuple(nltk.word_tokenize(raw_text))
+    fdist[tokens_list] += 1
 
-# Print the tokens
-print(tokens_list)
+# Print the FreqDist
+print(fdist)
